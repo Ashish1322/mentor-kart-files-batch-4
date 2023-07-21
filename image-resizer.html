@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hw</title>
+</head>
+<body>
+
+        <div>
+                Width:
+                <input onchange="increseWidht()" id="w"  type="text" />
+                <br />
+                Height:
+                <input onchange="increseWidht()" id="h" type="text" />
+                <br />
+                <img id="img" width="200px" src="https://a.espncdn.com/combiner/i?img=/photo/2023/0621/r1189156_1296x729_16-9.jpg" />
+        </div>
+        
+    <script >
+        function increseWidht() {
+            let w = document.getElementById("w").value;
+            let h = document.getElementById("h").value;
+
+            document.getElementById("img").style.width = w+"px";
+            document.getElementById("img").style.height = h+"px";
+        }
+
+      
+    </script>
+
+</body>
+</html>

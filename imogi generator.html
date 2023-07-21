@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+       
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Generate Emoji</h1>
+        <button onclick="generateEmoji()">Click on me to generate Emoji</button>
+        <div id="main">
+
+        </div>
+        <audio id="beep" src="beep.wav"></audio>
+    </div>
+
+    <script>
+       let box = document.getElementById("main")
+       let voice = document.getElementById("beep")
+       var emojis = ["https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdnk1NWs0d2Z2OWZ3Mmd6NGp1cW1yMDd0N3Mwb2lxcmwzN3d5enlsYSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/TpsuCxwsNH8gatbpR5/giphy.gif",
+       "https://media.tenor.com/yFi06hL-W1IAAAAM/smiley.gif",
+       "https://media.tenor.com/63nE7vC84pIAAAAM/care-discord.gif",
+       "https://media.tenor.com/LUdZXDHJ734AAAAC/dont-forget-emoji.gif",
+       "https://media.tenor.com/DTpTIwK3ScgAAAAM/angry-mad.gif"
+        ]
+
+       function generateEmoji()
+       {
+        voice.play()
+        let index = Math.floor(Math.random() * emojis.length)
+
+        box.innerHTML = box.innerHTML + `<img width='200px' src='${emojis[index]}' />`
+
+
+       }
+
+
+    </script>
+</body>
+</html>
