@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Storage</title>
+</head>
+<body>
+    
+    <input type="text" id="fname" placeholder="Enter Friend Name : "/>
+    <button onclick="addFrined()">Add Friend</button>
+    <h1> Your Fav. Friends</h1>
+    <div id="friends">
+
+    </div>
+
+
+    <script>
+        var friends ;
+        if(localStorage.getItem("friends"))
+        {
+            friends = JSON.parse(localStorage.getItem("friends"))
+        }
+        else
+        {
+            friends = []
+        }
+
+        function addFrined()
+        {
+            let name = document.getElementById("fname").value;
+            friends.push(name) // updating the array
+            // adding the updated array in the local storage
+            localStorage.setItem("friends",JSON.stringify(friends))
+
+            let div = document.getElementById("friends")
+            div.innerHTML = ""
+            friends.forEach( value => {
+                div.innerHTML = div.innerHTML + `<p>Name: ${value} </p>`
+            })
+
+        }
+    </script>
+</body>
+</html>

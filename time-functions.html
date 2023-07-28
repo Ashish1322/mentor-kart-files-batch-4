@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+</head>
+<body>
+    
+    <h1> Timer in Seconds: <span id="counter"> 0 </span> </h1>
+    <button onclick="start()"> Start </button>
+    <script>
+        function increaseSeconds()
+        {
+            let counter = document.getElementById("counter")
+            let value =  parseInt(counter.innerText)
+            counter.innerText = value-1
+        }
+
+        var temp;
+        
+        function start()
+        {
+            temp =  setInterval(increaseSeconds,1000)
+            setInterval(stop,1000)
+        }
+      
+        function stop()
+        {
+            let value = document.getElementById("counter").innerText;
+            value = parseInt(value)
+            if(value == 10)
+            {
+                clearInterval(temp);
+            }
+        }
+
+       
+
+
+
+    </script>
+</body>
+</html>
