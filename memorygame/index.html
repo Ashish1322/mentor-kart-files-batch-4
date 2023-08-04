@@ -15,16 +15,15 @@
 
     <div class="container">
 
-        <div class="cell unflip" data-index="a">
+        <div  class="cell unflip" data-index="a">
             <div class="front" ><img src="img/1.png" alt=""></div>
             <div class="back"></div>
            
         </div>
 
-        <div class="cell flip"  data-index="a">
+        <div  class="cell unflip"  data-index="a">
             <div class="front" ><img src="img/2.png" alt=""></div>
             <div class="back"></div>
-    
         </div>
 
         <div class="cell unflip"  data-index="b">
@@ -38,48 +37,124 @@
         </div>
 
 
-        <div class="cell unflip" >
+        <div class="cell unflip" data-index="c">
             <div class="front" ><img src="img/5.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-        <div class="cell unflip" >
+        <div class="cell unflip" data-index="c">
             <div class="front" ><img src="img/6.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-        <div class="cell unflip" >
+        <div class="cell unflip" data-index="d">
             <div class="front" ><img src="img/7.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-        <div class="cell unflip" >
+        <div class="cell unflip"  data-index="d">
             <div class="front" ><img src="img/8.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-        <div class="cell unflip" >
+        <div class="cell unflip" data-index="e">
             <div class="front" ><img src="img/9.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-        <div class="cell unflip" >
+        <div class="cell unflip" data-index="e">
             <div class="front" ><img src="img/10.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-        <div class="cell unflip" >
+        <div class="cell unflip" data-index="f">
             <div class="front" ><img src="img/11.png" alt=""></div>
             <div class="back"></div>
         </div>
 
-
-        <div class="cell unflip" >
+        <div class="cell unflip"  data-index="f" >
             <div class="front" ><img src="img/12.png" alt=""></div>
             <div class="back"></div>
         </div>
 
+        
     </div>
+
+    <script>
+        var cells =  document.getElementsByClassName("cell")
+        var selectedCells = []
+
+        function compareBoxes()
+        {
+            // if they are matching keep them same
+            let dataIndexFirst = selectedCells[0].dataset.index;
+                let dataIndexSecond = selectedCells[1].dataset.index;
+
+                // check if data-index of both the selected cells matching
+                if(dataIndexFirst === dataIndexSecond)
+                {
+                    processMatchedBoxes();
+                }
+                else
+                {
+                    // we will close both the boxes if they are not matching
+                    closeSeletedBox();
+               
+                }
+        }
+
+        function handleClick()
+        {
+            if(selectedCells.length == 2)
+            return;
+            
+            // make the clicked box visible if it is first and second
+            this.classList.remove("unflip")
+            this.classList.add("flip")
+            selectedCells.push(this)
+
+            if(selectedCells.length == 2)
+            {
+               setTimeout(compareBoxes,1000);
+            }
+           
+        }
+
+        function closeSeletedBox () 
+        {
+            for(let i = 0 ; i < 2 ; i++)
+                {
+                    selectedCells[i].classList.remove("flip")
+                    selectedCells[i].classList.add("unflip")
+                }
+                // clear the array so that next time we can flip boxes
+                selectedCells = []
+        }
+       
+        function processMatchedBoxes () 
+        {
+            // before clearing the array remove the listner from both the boxes because now they are of no use 
+            for(let i = 0 ; i < 2 ; i++)
+                {
+                    selectedCells[i].removeEventListener("click",handleClick)
+                    selectedCells[i].removeEventListener("click",handleClick)
+                }
+
+            // clear the array so that next 2 can be selected and keep the previous element visi
+            selectedCells = []
+            // update the scores
+            document.getElementById("score").innerText = parseInt(document.getElementById("score").innerText) + 1
+
+        }
+
+    
+        for(let index = 0 ; index < cells.length ; index++)
+        {
+            let currentCell = cells[index]
+            currentCell.addEventListener("click",handleClick)
+        }
+
+    </script>
 
 </body>
 </html>
