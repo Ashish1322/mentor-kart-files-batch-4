@@ -34,12 +34,25 @@ function App() {
   {
     let todo = {
       task: task,
-      description: description
+      description: description,
+      completed: false
     }
     // [1]
     setTodos([...todos,todo])
-    
-    
+  }
+  
+  const markAsComplete = (id) => {
+    var temp = [...todos]
+    temp[id].completed = true
+
+    setTodos(temp)
+  }
+
+  const deleteTodo = (id) => {
+   
+    var temp = [...todos]
+    temp.splice(id,1)
+    setTodos(temp)
   }
 
   return (
@@ -54,8 +67,8 @@ function App() {
       </div>
 
       <div >
-      {todos && todos.map(item => 
-        <TodoCard task={item.task} description={item.description} />
+      {todos && todos.map( (item,index) => 
+        <TodoCard deleteTodo={deleteTodo} markAsComplete={markAsComplete} id={index} task={item.task} completed={item.completed} description={item.description} />
       )}
       </div>
 
