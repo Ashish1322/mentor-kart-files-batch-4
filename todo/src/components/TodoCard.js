@@ -2,8 +2,6 @@
 
 export default function TodoCard({task,description,completed,id,markAsComplete,deleteTodo}) {
 
-
-
   return (
     <div style={{border: "1px solid black",padding:5,margin: 20}}>
 
