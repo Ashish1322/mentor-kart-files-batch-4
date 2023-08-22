@@ -13,6 +13,7 @@ import { useEffect } from 'react'
 function App() {
 
   const [movies,setMovies] = useState([])
+  const [series,setSeries] = useState([])
 
   // This function will search for all the movies including given keyword in theri name and 
   // store them in movies state
@@ -24,18 +25,32 @@ function App() {
   }
 
 
+  const fetchSeries = (keyword) => {
+    fetch(`https://www.omdbapi.com/?apikey=5941fb3&s=${keyword}&type=series`)
+    .then( res =>  res.json())
+    .then (data => setSeries(data.Search))
+    .catch(err => alert("Something Went Wrong !"))
+  }
+
+
+
   useEffect(() => {
     fetchMovies("harry")
+    fetchSeries("one")
   },
   [])
 
+
+
+
+  console.log(movies)
   return (
     <div>
-      <Navbar />
+      <Navbar fetchSeries={fetchSeries} fetchMovies={fetchMovies}/>
       <Routes>
-        <Route path='/' element={<Home movies={movies} />} />
+        <Route path='/' element={<Home series={series} movies={movies} />} />
         <Route path='/about' element={ <About />} />
-        <Route path='/movie-details' element={<MovieDetail />} />
+        <Route path='/movie-details/:id' element={<MovieDetail />} />
       </Routes>
     </div>
     
