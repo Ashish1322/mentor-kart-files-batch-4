@@ -25,9 +25,9 @@ function App() {
       
     <Routes>
       <Route path='/' element={<Home />} />
-      <Route path='/details' element={<ProfileDetails />} />
-
+      <Route path='/details/:gitid' element={<ProfileDetails />} />
     </Routes>
+    
     </GitContext.Provider>
   )
 }

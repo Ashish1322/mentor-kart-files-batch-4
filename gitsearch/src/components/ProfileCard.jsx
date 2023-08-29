@@ -1,5 +1,5 @@
 import React from 'react'
-
+import {Link} from 'react-router-dom'
 export default function ProfileCard({  avatar_url, html_url ,repos_url , login}) {
   return (
     <div className='flex'>
@@ -10,7 +10,7 @@ export default function ProfileCard({  avatar_url, html_url ,repos_url , login})
         <div>
           <h3>{login}</h3>
           <a target="_blank" href={html_url}>View Profile</a>
-          <a target="_blank" href={repos_url}> View Repos </a>
+          <Link to={`/details/${login}`}> View Repos </Link>
         </div>
       </div>
     </div>
