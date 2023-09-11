@@ -1,40 +1,47 @@
+const {Todo} = require("./modals/Todo")
+
+// setting up express
+const express = require("express")
+const app = express()
+
+// connecting to Mongodb
 const mongoose = require("mongoose")
-const {User} = require("./modals/User.js")
 
-// How to connect to a mongodb database
 mongoose.connect("mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.0")
-.then( () => console.log("Database Connected"))
-.catch( (err) => console.log("connection Failed ",err.message))
+.then(() => console.log("Database Connected"))
+.catch(err => console.log("Error Ocucred While Conneting ",err.message))
 
 
-// INSERT Document ( create function we use)
-User.create({name:"Ashish",email: "abcd3@gmail.com",age:20})
-.then(() => console.log("User Created"))
-.catch(err => console.log(err.message))
+// middlewares
+app.use(express.json())
 
-// READ Document (find, findOne, findById)
-// User.findOne({email:"abcd3@gmail.com"}).sort({age:-1})
-// .then( (users) => {
-//     console.log(users)
-// })
-// .catch(err => console.log(err.message))
+// Todo Routes
 
-// User.findById("64fb4b9c9d13a4691e2e97d9")
-// .then(doc => console.log(doc))
+// 1. Add Todo : POST
+app.post("/api/todos/add-todo", (req,res) => {
 
-// Update Doc
-// User.findOneAndUpdate({name:"Ashish"}, {age:70})
-// .then(() => console.log("updated"))
-// .catch((err) => console.log(err.message))
+    const title = req.body.title;
+    const description = req.body.description
+
+    Todo.create({title: title, description: description})
+    .then(() => res.json({success: true, message:"Data Aadded"}) )
+    .catch((err) => res.json({success: false, message: err.message}))
+
+    
+})
+
+// 2. Give me all todos : GET
+app.get("/api/todos/get-all-todos",(req,res) => {
+    Todo.find()
+    .then(todos => res.json({success: true, todos: todos}))
+    .catch(err => res.json({success: false , message: err.message}))
+})
+
+// 3. Delete Todo : DELETE
 
 
-// Delete Doc
-// User.findOneAndDelete({email:"abcd3@gmail.com",name:"Nishta"})
-// .then(() => console.log("deletd"))
-// .catch((err) => console.log(err.message))
 
 
-// User.findByIdAndDelete("64fb4b2c98965358d7fb5078")
-// .then(() => console.log("deletd"))
-// .catch((err) => console.log(err.message))
+
+app.listen(3001,() => console.log("Server is Running at port 3001"))
 
