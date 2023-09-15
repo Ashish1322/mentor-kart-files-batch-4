@@ -1,6 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
+
 const User = require("./modals/user");
+const Todos = require("./modals/todo");
+
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const app = express();
@@ -15,7 +18,7 @@ mongoose
   .then(() => console.log("Database Connected"))
   .catch((err) => console.log("Erro Conncting Database ", err.message));
 
-// Singup ( POST )
+// STEP 1:  Singup ( POST )
 app.post("/auth/signup", (req, res) => {
   const { email, password, name } = req.body;
 
@@ -41,9 +44,10 @@ app.post("/auth/signup", (req, res) => {
     .catch((err) => res.json({ success: false, message: err.message }));
 });
 
+// STEP 2: LOGIN ( POST )
 app.post("/auth/login", (req, res) => {
   const { email, password } = req.body;
-  console.log(req.headers);
+
   // Check if Account Exists
   User.findOne({ email: email })
     .then((user) => {
@@ -58,7 +62,7 @@ app.post("/auth/login", (req, res) => {
           // We well sign a token
           const token = jwt.sign(
             { name: user.name, email: user.email, _id: user._id },
-            "falfdfjlskdfdsl"
+            "12345"
           );
 
           return res.json({
@@ -74,21 +78,50 @@ app.post("/auth/login", (req, res) => {
     .catch((err) => res.json({ success: false, message: err.message }));
 });
 
-app.get("/todos", (req, res) => {
+// STEP 3:  ADD TODO ( Needs Token else will not allows)
+app.post("/todo/add", (req, res) => {
   // 1. I will verify the token ( Token will be present in req.headers)
+  const token = req.headers.authorization;
+  const { title, description } = req.body;
+
+  // First i will verify if  user is LoggedIn or not
+  try {
+    var data = jwt.verify(token, "12345");
+    // user is looged then add todo
+    Todos.create({ title, description, createdBy: data._id })
+      .then((t) => res.json({ success: true, message: "Todo Added" }))
+      .catch((err) => res.json({ success: false, message: err.message }));
+  } catch (err) {
+    // err
+    res.json({ success: false, data: "Not Authenticated" });
+  }
+});
+
+// READ TODO
+app.get("/todo/get", (req, res) => {
   const token = req.headers.authorization;
 
   try {
-    var data = jwt.verify(token, "falfdfjlskdfdsl");
-    // user LoggeIn
+    const data = jwt.verify(token, "12345");
 
-    res.json({ success: true, data: "HI" });
+    Todos.find({ createdBy: data._id })
+      .then((todo) => res.json({ success: true, todos: todo }))
+      .catch((err) => res.json({ success: false, message: err.message }));
   } catch (err) {
-    // err
-    res.json({ success: false, data: "Token is Wrong" });
+    res.json({ success: false, data: "Not Authenticated" });
+  }
+});
+
+// In order to make any route protected you have to use this code snippeit
+app.get("/abc", (req, res) => {
+  const token = req.headers.authorization;
+
+  try {
+    const data = jwt.verify(token, "12345");
+    // after you can write your logic
+  } catch (err) {
+    res.json({ success: false, data: "Not Authenticated" });
   }
 });
 
 app.listen(3001, () => console.log("Server is Running at 3001"));
-
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQXNoaWhzaCIsImVtYWlsIjoiYS5tMjAwMm5vdkBnbWFpbC5jb20iLCJfaWQiOiI2NTAxZmZmYWFhOWE3Mzk2OTlmYWI2M2IiLCJpYXQiOjE2OTQ3MTAwMTd9.KdFpVai8RK6Lj-HRsq33iwmhOsxqK_WfE9EK9A0qB80
