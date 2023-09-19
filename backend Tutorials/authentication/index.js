@@ -85,22 +85,64 @@ app.post("/auth/login", (req, res) => {
 // STEP 3:  ADD TODO ( Needs Token else will not allows)
 app.post("/todo/add", isLoggedIn, (req, res) => {
   // 1. I will verify the token ( Token will be present in req.headers)
-  console.log(req.tokenData);
+
   const { title, description } = req.body;
 
-  Todos.create({ title, description, createdBy: data._id })
+  Todos.create({ title, description, createdBy: req.tokenData._id })
     .then((t) => res.json({ success: true, message: "Todo Added" }))
     .catch((err) => res.json({ success: false, message: err.message }));
 });
 
 // READ TODO
 app.get("/todo/get", isLoggedIn, (req, res) => {
-  console.log("Controllor", req.tokenData);
   Todos.find({ createdBy: req.tokenData._id })
-    .then((todo) => res.json({ success: true, todos: todo }))
+    .then((todo) => {
+      console.log(todo);
+      return res.json({ success: true, todos: todo });
+    })
     .catch((err) => res.json({ success: false, message: err.message }));
+});
+
+// TIP: Whenever you wanted to designa an api where docuemnt will be updated or delte always spicify the
+//      _id or docId in the url params of api
+
+// Update Todo ( userId, title, description, completed, todoId)
+app.put("/todo/update/:todoId", isLoggedIn, (req, res) => {
+  const { title, description, completed } = req.body;
+  const todoId = req.params.todoId;
+
+  // give me todo with given id and created by loggedIn user
+  Todos.findOneAndUpdate(
+    { _id: todoId, createdBy: req.tokenData._id },
+    { title, description, completed }
+  )
+    .then((doc) => {
+      if (doc) {
+        return res.json({ success: true, data: "Todo Updagted" });
+      } else {
+        return res.json({ success: false, data: "No Document Found" });
+      }
+    })
+    .catch((err) => res.json({ success: false, data: err.message }));
+});
+
+// Delete Todo
+app.delete("/todo/delete/:todoId", isLoggedIn, (req, res) => {
+  Todos.findOneAndDelete({
+    _id: req.params.todoId,
+    createdBy: req.tokenData._id,
+  })
+    .then((doc) => {
+      if (doc) {
+        return res.json({ success: true, data: "Document Deleted" });
+      } else {
+        return res.json({ success: false, data: "No document Found" });
+      }
+    })
+    .catch((err) => res.json({ success: false, data: err.message }));
 });
 
 app.listen(3001, () => console.log("Server is Running at 3001"));
 
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiIiwiZW1haWwiOiJhYmNAZ21haWxjLmNvbSIsIl9pZCI6IjY1MDg4Njg4NjU5ZDE5ZjJlZDgyZWMwOSIsImlhdCI6MTY5NTA1OTE0M30.T6qvIjRc3BGdFPm9l7e4dSQzfsbq4kVG6bGpBo5soyA
+// Vinahs: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVmluYWhzaCIsImVtYWlsIjoiYXZpbmFzaEBnbWFpbC5jb20iLCJfaWQiOiI2NTA5ZGMwYzA2MTFkMDJkMWJjYWJmNzMiLCJpYXQiOjE2OTUxNDUwODJ9.jU_DU61SgQOwU2bVp6IF-HOx-fYYtM9vvJTP051L2Nc
+// Ashish: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQXNoaXNoIiwiZW1haWwiOiJhc2hpc2hAZ21haWwuY29tIiwiX2lkIjoiNjUwOWRiZWUwNjExZDAyZDFiY2FiZjcwIiwiaWF0IjoxNjk1MTQ1MTQ3fQ.F42iikUxWlE45oT6bdaVEN4peHdIPsMyDVQCbCWAFQU
