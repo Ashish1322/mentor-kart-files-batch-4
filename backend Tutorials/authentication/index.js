@@ -7,11 +7,12 @@ const Todos = require("./modals/todo");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const app = express();
-
+const cors = require("cors");
 // import middlewares
 const { checkBodyParams, isLoggedIn } = require("./midllewares/genera.js");
 
 app.use(express.json());
+app.use(cors());
 
 // Database Connecton
 mongoose
