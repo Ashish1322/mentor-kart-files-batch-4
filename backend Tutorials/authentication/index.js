@@ -69,11 +69,11 @@ app.post("/auth/login", (req, res) => {
             "12345"
           );
 
-          console.log(token);
           return res.json({
             success: true,
             message: "Logged IN",
             token: token,
+            name: user.name,
           });
         } else {
           return res.json({ success: false, message: "Wrong Password" });
