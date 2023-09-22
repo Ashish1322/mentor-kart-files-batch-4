@@ -24,13 +24,14 @@ function isLoggedIn(req, res, next) {
 
   try {
     const data = jwt.verify(token, "12345");
+    console.log(data);
     // Injecting the dat inside the request so that the next controllor can access this injected data this is the
     // method for passing the data from  middleware to controllor
     req.tokenData = data;
     return next();
     // after you can write your logic
   } catch (err) {
-    return res.json({ success: false, data: err.message });
+    return res.json({ success: false, message: err.message });
   }
 }
 

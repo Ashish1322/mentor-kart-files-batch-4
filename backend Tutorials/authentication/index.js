@@ -66,7 +66,8 @@ app.post("/auth/login", (req, res) => {
           // We well sign a token
           const token = jwt.sign(
             { name: user.name, email: user.email, _id: user._id },
-            "12345"
+            "12345",
+            { expiresIn: 30 }
           );
 
           return res.json({
@@ -108,14 +109,14 @@ app.get("/todo/get", isLoggedIn, (req, res) => {
 //      _id or docId in the url params of api
 
 // Update Todo ( userId, title, description, completed, todoId)
-app.put("/todo/update/:todoId", isLoggedIn, (req, res) => {
-  const { title, description, completed } = req.body;
+app.put("/todo/mark-complete/:todoId", isLoggedIn, (req, res) => {
+  const { completed } = req.body;
   const todoId = req.params.todoId;
 
   // give me todo with given id and created by loggedIn user
   Todos.findOneAndUpdate(
     { _id: todoId, createdBy: req.tokenData._id },
-    { title, description, completed }
+    { completed }
   )
     .then((doc) => {
       if (doc) {
