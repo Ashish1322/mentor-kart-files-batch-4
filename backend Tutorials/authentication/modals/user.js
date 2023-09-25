@@ -5,6 +5,11 @@ const userShema = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  emailVerified: {
+    type: Boolean,
+    default: false,
+    required: true,
+  },
   password: String,
 });
 

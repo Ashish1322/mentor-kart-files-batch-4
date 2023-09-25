@@ -1,6 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
-
+const nodemailer = require("nodemailer");
 const User = require("./modals/user");
 const Todos = require("./modals/todo");
 
@@ -41,11 +41,74 @@ app.post("/auth/signup", checkBodyParams, (req, res) => {
 
         // Create User in database
         User.create({ email: email, name: name, password: has })
-          .then(() => res.json({ success: true, message: "Account Created" }))
+          .then((user) => {
+            // if account is created successfully then sent an account activation email
+
+            // generate token
+            const token = jwt.sign({ _id: user._id }, "12345", {
+              expiresIn: 30 * 30,
+            });
+
+            // send this tokne on email
+            var transporter = nodemailer.createTransport({
+              service: "gmail",
+              auth: {
+                user: "a.m2001nov@gmail.com",
+                pass: "aptz zbky ebnx cxxg",
+              },
+            });
+
+            var mailOptions = {
+              from: "a.m2001nov@gmail.com",
+              to: user.email,
+              subject: "Activate Your Account Todo",
+              html: `
+              <p> Hey ${user.name}, Welcome in Todo App. Your Account has been created. In order to use your accouant you 
+              have to veify your email by clicking on following link </p>
+            
+              <a style="padding:10px; background-color: dodgerblue" href="http://localhost:3001/auth/activate-account/${token}"> Activate Account </a>
+              `,
+            };
+
+            // sending email
+            transporter.sendMail(mailOptions, function (error, info) {
+              if (error) {
+                return res.json({ success: false, message: "Error Occured" });
+              } else {
+                return res.json({
+                  success: true,
+                  message:
+                    "An Account activation link has been sent on given email.",
+                });
+              }
+            });
+          })
           .catch((err) => res.json({ success: false, message: err.message }));
       });
     })
     .catch((err) => res.json({ success: false, message: err.message }));
+});
+
+// Route that will hanlde the accoaunt activation link sent on email
+app.get("/auth/activate-account/:token", (req, res) => {
+  const token = req.params.token;
+
+  // try to verify token
+  try {
+    const data = jwt.verify(token, "12345");
+
+    // try to find the User now
+    User.findByIdAndUpdate(data._id, { emailVerified: true })
+      .then(() => res.redirect("http://127.0.0.1:5173/"))
+      .catch(() =>
+        res.json({
+          success: false,
+          messaeg: "Please Try Again! We are sorry for Inconvinece!",
+        })
+      );
+  } catch (err) {
+    return res.json({ success: false, message: "Link has Been Expired!" });
+  }
 });
 
 // STEP 2: LOGIN ( POST )
@@ -58,6 +121,12 @@ app.post("/auth/login", (req, res) => {
       if (!user) {
         return res.json({ success: false, message: "Email Not Found!" });
       }
+      //Checking Only: if user exsit then we will check the email is verified or not
+      if (user.emailVerified == false)
+        return res.json({
+          success: false,
+          message: "Please Verify Your Account by the link sent on mail",
+        });
 
       // if user exsit then compare password
       bcrypt.compare(password, user.password, (err, result) => {
