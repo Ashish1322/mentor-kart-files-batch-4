@@ -30,6 +30,8 @@ export default function Login() {
         <br></br>
         <input type="submit" value="Login" />
         <br />
+        <Link to="/forget-password">Forget Password ?</Link>
+        <br />
         <Link to="/signup">Don't have account, Register ?</Link>
       </form>
     </div>

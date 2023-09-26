@@ -217,3 +217,70 @@ app.listen(3001, () => console.log("Server is Running at 3001"));
 
 // Vinahs: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiVmluYWhzaCIsImVtYWlsIjoiYXZpbmFzaEBnbWFpbC5jb20iLCJfaWQiOiI2NTA5ZGMwYzA2MTFkMDJkMWJjYWJmNzMiLCJpYXQiOjE2OTUxNDUwODJ9.jU_DU61SgQOwU2bVp6IF-HOx-fYYtM9vvJTP051L2Nc
 // Ashish: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiQXNoaXNoIiwiZW1haWwiOiJhc2hpc2hAZ21haWwuY29tIiwiX2lkIjoiNjUwOWRiZWUwNjExZDAyZDFiY2FiZjcwIiwiaWF0IjoxNjk1MTQ1MTQ3fQ.F42iikUxWlE45oT6bdaVEN4peHdIPsMyDVQCbCWAFQU
+
+// Forget Password
+
+app.post("/forget-password", (req, res) => {
+  const { email } = req.body;
+
+  // 1. Check if any account exist with this email
+  User.findOne({ email })
+    .then((user) => {
+      if (!user)
+        return res.json({
+          success: false,
+          message: "No Account find with this email!",
+        });
+
+      // generate token forget password tokne
+      let token = jwt.sign({ _id: user._id }, "forgetPasswordToken1234", {
+        expiresIn: 30 * 30,
+      });
+
+      // modify the token so that it will work on vite
+      let newToken1 = token.replace(".", "--");
+      let newToken2 = newToken1.replace(".", "--");
+
+      // send this tokne on email
+      var transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: "a.m2001nov@gmail.com",
+          pass: "aptz zbky ebnx cxxg",
+        },
+      });
+
+      var mailOptions = {
+        from: "a.m2001nov@gmail.com",
+        to: user.email,
+        subject: "Forget Password",
+        html: `
+        <p> Hey ${user.name}, Click on the followign link to update your password </p>
+      
+        <a style="padding:10px; background-color: dodgerblue" href="http://127.0.0.1:5173/forget-password/set-password/${newToken2}"> Update Password </a>
+
+        <p> If it's not done by you, Just ingone it </p>
+        `,
+      };
+
+      // sending email
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          return res.json({ success: false, message: "Error Occured" });
+        } else {
+          return res.json({
+            success: true,
+            message: "An Forget Password Link sent to your email",
+          });
+        }
+      });
+    })
+    .catch((err) => res.json({ success: false, message: err.message }));
+});
+
+app.post("/handle-update-password", (req, res) => {
+  const { token, password } = req.body;
+
+  console.log(token);
+  console.log(password);
+});

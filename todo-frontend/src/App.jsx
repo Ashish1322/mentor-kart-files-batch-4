@@ -5,7 +5,8 @@ import "./App.css";
 import TodoContext from "./TodoContext";
 import Home from "./components/Home";
 import { useNavigate, Route, Routes } from "react-router-dom";
-
+import ForgetPassword from "./components/ForgetPassword";
+import ForgetPasswordInput from "./components/ForgetPasswordInput";
 function App() {
   const [user, setUser] = useState(null);
   const [todos, setTodos] = useState([]);
@@ -198,6 +199,11 @@ function App() {
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/home" element={<Home />} />
+        <Route path="/forget-password" element={<ForgetPassword />} />
+        <Route
+          path="/forget-password/set-password/:token"
+          element={<ForgetPasswordInput />}
+        />
       </Routes>
     </TodoContext.Provider>
   );
