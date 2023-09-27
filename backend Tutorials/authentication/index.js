@@ -1,8 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
-const Todos = require("./modals/todo");
-
 const app = express();
 const cors = require("cors");
 // import middlewares
