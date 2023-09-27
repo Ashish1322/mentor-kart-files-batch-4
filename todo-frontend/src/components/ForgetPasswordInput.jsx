@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 export default function ForgetPasswordInput() {
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");
   const { token } = useParams();
+
+  const navigate = useNavigate();
+
   const updatePassword = () => {
     if (password != password2) {
       alert("Password are not Matching");
@@ -19,11 +23,12 @@ export default function ForgetPasswordInput() {
     })
       .then((res) => res.json())
       .then((data) => {
+        console.log(data);
         if (data.success == false) {
           alert(data.message);
         } else {
           // if todo is deleted successfully
-          alert(data.message);
+          navigate("/");
         }
       })
       .catch((err) => console.log("Error ", err.message));
