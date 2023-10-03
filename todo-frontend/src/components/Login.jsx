@@ -13,16 +13,18 @@ export default function Login() {
     login(email, password);
   };
   return (
-    <div>
+    <div className="container">
       <form onSubmit={hanldeSubmit}>
-        <h1>Login Now</h1>
+        <h1 className="text-center text-muted">Login Now</h1>
         <input
+          className="my-2 p-2"
           onChange={(e) => setEmail(e.currentTarget.value)}
           placeholder="Enter Email"
           type="email"
         />
         <br></br>
         <input
+          className="my-2 p-2"
           onChange={(e) => setPassword(e.currentTarget.value)}
           placeholder="Enter Password"
           type="password"
@@ -30,10 +32,32 @@ export default function Login() {
         <br></br>
         <input type="submit" value="Login" />
         <br />
-        <Link to="/forget-password">Forget Password ?</Link>
+        <Link className="text-center" to="/forget-password">
+          Forget Password ?
+        </Link>
         <br />
-        <Link to="/signup">Don't have account, Register ?</Link>
+        <Link className="btn btn-outline-primary btn-sm" to="/signup">
+          Don't have account, Register ?
+        </Link>
       </form>
+
+      <div
+        className="alert alert-warning alert-dismissible fade show"
+        role="alert"
+      >
+        <strong>Holy guacamole!</strong> You should check in on some of those
+        fields below.
+        <button
+          type="button"
+          className="btn-close"
+          data-bs-dismiss="alert"
+          aria-label="Close"
+        ></button>
+      </div>
+
+      <div className="spinner-border" role="status">
+        <span className="visually-hidden">Loading...</span>
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import { useNavigate, Route, Routes } from "react-router-dom";
 import ForgetPassword from "./components/ForgetPassword";
 import ForgetPasswordInput from "./components/ForgetPasswordInput";
+import BootstrapGrid from "./components/BootstrapGrid";
 function App() {
   const [user, setUser] = useState(null);
   const [todos, setTodos] = useState([]);
@@ -195,7 +196,7 @@ function App() {
       }}
     >
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<BootstrapGrid />} />
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/home" element={<Home />} />
