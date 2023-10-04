@@ -8,10 +8,13 @@ import { useNavigate, Route, Routes } from "react-router-dom";
 import ForgetPassword from "./components/ForgetPassword";
 import ForgetPasswordInput from "./components/ForgetPasswordInput";
 import BootstrapGrid from "./components/BootstrapGrid";
+import NavBar from "./components/NavBar";
 function App() {
   const [user, setUser] = useState(null);
   const [todos, setTodos] = useState([]);
+  const [error, setError] = useState(null);
   const natigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   // STEP 1
   const login = (email, password) => {
@@ -30,7 +33,7 @@ function App() {
       .then((data) => {
         // if the login is success then only we will store in in state
         if (data.success == false) {
-          alert(data.message);
+          setError(data.message);
         } else {
           // if login is succes then store the user and move the user to home page
           setUser(data);
@@ -193,10 +196,13 @@ function App() {
         deleteTodos,
         markAsComplete,
         logout,
+        error,
+        loading,
       }}
     >
+      <NavBar />
       <Routes>
-        <Route path="/" element={<BootstrapGrid />} />
+        <Route path="/" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/home" element={<Home />} />

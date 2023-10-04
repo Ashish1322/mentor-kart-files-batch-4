@@ -93,7 +93,7 @@ const login = (req, res) => {
           const token = jwt.sign(
             { name: user.name, email: user.email, _id: user._id },
             "12345",
-            { expiresIn: 30 }
+            { expiresIn: 300000 }
           );
 
           return res.json({

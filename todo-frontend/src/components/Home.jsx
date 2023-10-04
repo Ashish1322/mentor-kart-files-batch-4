@@ -21,46 +21,77 @@ export default function Home() {
 
   const [title, setTitle] = useState("");
   const [description, setDesc] = useState("");
+
   return (
     <div>
-      <h1>Welcom {user && user.name}</h1>
-      <button onClick={logout}>Logout</button>
-      <div style={{ padding: 10, margin: 10, border: "1px solid #d5d5d5" }}>
-        <h3>Add Todo</h3>
-        <input
-          value={title}
-          onChange={(e) => setTitle(e.currentTarget.value)}
-          type="text"
-          placeholder="Title"
-        />
-        <br />
-        <br />
-        <textarea
-          value={description}
-          onChange={(e) => setDesc(e.currentTarget.value)}
-        ></textarea>
-        <br />
-        <button
-          onClick={() => {
-            addTodo(title, description);
-            setTitle("");
-            setDesc("");
-          }}
-        >
-          Add Todo
-        </button>
-      </div>
+      <div className="container mt-4 p-4 bg-info">
+        <h1 className="text-center">Welcom {user && user.name}</h1>
+        <div className="text-center">
+          <button className="btn btn-sm btn-warning" onClick={logout}>
+            Logout
+          </button>
+        </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "20px" }}>
-        {todos.map((item, index) => (
-          <TodoItem
-            id={item._id}
-            title={item.title}
-            description={item.description}
-            completed={item.completed}
-            key={index}
-          />
-        ))}
+        <div className="row">
+          <div className="col col-6">
+            <div className="card" style={{ width: "25rem" }}>
+              <div className="card-body">
+                <h5 className="card-title">Add Todo</h5>
+
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    addTodo(title, description);
+                  }}
+                >
+                  <div className="mb-3">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
+                      Title
+                    </label>
+                    <input
+                      type="text"
+                      onChange={(e) => setTitle(e.currentTarget.value)}
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label
+                      htmlFor="exampleInputPassword1"
+                      className="form-label"
+                    >
+                      Description
+                    </label>
+                    <input
+                      onChange={(e) => setDesc(e.currentTarget.value)}
+                      type="text"
+                      className="form-control"
+                      id="exampleInputPassword1"
+                    />
+                  </div>
+
+                  <button type="submit" className="btn btn-primary">
+                    Add Todo
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div className="col col-6">
+            <div className="container mt-5">
+              {todos.map((item, index) => (
+                <TodoItem
+                  id={item._id}
+                  title={item.title}
+                  description={item.description}
+                  completed={item.completed}
+                  key={index}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
