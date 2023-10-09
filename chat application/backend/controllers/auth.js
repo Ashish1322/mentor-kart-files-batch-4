@@ -2,6 +2,7 @@
 const User = require("../modals/ChatUser");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 
 const login = (req, res) => {
   const { email, password } = req.body;
@@ -18,6 +19,11 @@ const login = (req, res) => {
           .status(401)
           .json({ success: false, message: "Invalid Email" });
 
+      // check if user is verified or not
+      if (user.verified == false)
+        return res
+          .status(401)
+          .json({ success: false, message: "Please verify your email !" });
       // check the password
       bcrypt.compare(password, user.password, function (err, result) {
         // correct password
@@ -32,9 +38,12 @@ const login = (req, res) => {
           );
 
           // send this token to user
-          return res
-            .status(200)
-            .json({ success: true, message: "Logged In Success", token });
+          return res.status(200).json({
+            success: true,
+            message: "Logged In Success",
+            token,
+            name: user.name,
+          });
         }
         // incorrect password
         else {
@@ -69,9 +78,42 @@ const signup = async (req, res) => {
 
     const hashPasword = bcrypt.hashSync(password, 10);
 
-    await User.create({ name, email, password: hashPasword });
+    const newUser = await User.create({ name, email, password: hashPasword });
 
-    res.status(200).json({ success: true, message: "Account Created" });
+    // sign the token
+    const token = jwt.sign(
+      {
+        _id: newUser._id,
+      },
+      "VERFYEMAIL1233"
+    );
+
+    // sending the mail
+    let mailTransporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "a.m2001nov@gmail.com",
+        pass: "aptz zbky ebnx cxxg",
+      },
+    });
+
+    let mailDetails = {
+      from: "a.m2001nov@gmail.com",
+      to: newUser.email,
+      subject: "Activate Your GupSup Account !",
+      html: `
+      <h1> Welcome in GupShup Family ! </h1>
+      <p> We are happy to onboard you </p>
+      <a href="http://127.0.0.1:8000/auth/activate-account/${token}"> Click here to verify the email </a>
+      `,
+    };
+
+    await mailTransporter.sendMail(mailDetails);
+
+    res.status(200).json({
+      success: true,
+      message: "Account activation link has been sent on your email",
+    });
   } catch (err) {
     res.status(500).json({
       success: false,
@@ -80,4 +122,16 @@ const signup = async (req, res) => {
   }
 };
 
-module.exports = { login, signup };
+const activateAccount = async (req, res) => {
+  const token = req.params.token;
+  try {
+    const data = jwt.verify(token, "VERFYEMAIL1233");
+
+    await User.findByIdAndUpdate(data._id, { verified: true });
+    res.redirect("http://127.0.0.1:5173/");
+  } catch (err) {
+    res.json({ success: false, message: "Link Expired" });
+  }
+};
+
+module.exports = { login, signup, activateAccount };
