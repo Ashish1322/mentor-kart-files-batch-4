@@ -7,7 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 
 import ChatContext from "../ChatContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 export default function App() {
   const [user, setUser] = useState(null);
 
@@ -26,7 +26,12 @@ export default function App() {
         if (data.success == false) {
           toast.error(data.message);
         } else {
+          // store the user in state
           setUser(data);
+          // store the user in localstorage
+          localStorage.setItem("chatuser", JSON.stringify(data));
+          // redirect to home page
+          navigator("/home");
         }
       })
       .catch((err) => {
@@ -56,7 +61,19 @@ export default function App() {
       });
   };
 
-  const logout = () => {};
+  const logout = () => {
+    setUser(null);
+    localStorage.clear("chatuser");
+    navigator("/");
+  };
+
+  // check if user is loggedin already then redirect them to home page
+  useEffect(() => {
+    if (localStorage.getItem("chatuser")) {
+      setUser(JSON.parse(localStorage.getItem("chatuser")));
+      navigator("/home");
+    }
+  }, []);
 
   return (
     <div>

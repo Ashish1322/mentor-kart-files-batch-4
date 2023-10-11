@@ -70,11 +70,13 @@ const signup = async (req, res) => {
   try {
     // check if the user already exist with provided email
     const user = await User.findOne({ email: email });
-    if (user)
+    if (user) {
+      // if he is veried
       return res.status(401).json({
         success: false,
         message: "Account with this email already exists!",
       });
+    }
 
     const hashPasword = bcrypt.hashSync(password, 10);
 
