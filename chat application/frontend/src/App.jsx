@@ -12,9 +12,10 @@ export default function App() {
   const [user, setUser] = useState(null);
 
   const navigator = useNavigate();
+  const BASE_URL = "http://127.0.0.1:8000";
 
   const login = (email, password) => {
-    fetch("http://127.0.0.1:8000/auth/login", {
+    fetch(`${BASE_URL}/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -40,7 +41,7 @@ export default function App() {
   };
 
   const signup = (email, password, name) => {
-    fetch("http://127.0.0.1:8000/auth/signup", {
+    fetch(`${BASE_URL}/auth/signup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -75,9 +76,32 @@ export default function App() {
     }
   }, []);
 
+  // search for friend
+  const searchFriends = (query) => {
+    fetch(`${BASE_URL}/friends/search-friend`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user.token,
+      },
+      body: JSON.stringify({ query }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success == false) {
+          toast.error(data.message);
+        } else {
+          console.log(data);
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
   return (
     <div>
-      <ChatContext.Provider value={{ login, signup, logout, user }}>
+      <ChatContext.Provider
+        value={{ login, signup, logout, user, searchFriends }}
+      >
         <ToastContainer />
         <Routes>
           <Route path="/" element={<Login />} />
