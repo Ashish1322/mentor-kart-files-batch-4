@@ -97,6 +97,8 @@ export default function App() {
       .catch((err) => toast.error(err.message));
   };
 
+  console.log(user);
+
   return (
     <div>
       <ChatContext.Provider
