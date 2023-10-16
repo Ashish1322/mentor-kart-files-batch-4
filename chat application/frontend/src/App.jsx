@@ -76,6 +76,7 @@ export default function App() {
     }
   }, []);
 
+  const [searchResults, setSearchResults] = useState([]);
   // search for friend
   const searchFriends = (query) => {
     fetch(`${BASE_URL}/friends/search-friend`, {
@@ -91,18 +92,25 @@ export default function App() {
         if (data.success == false) {
           toast.error(data.message);
         } else {
-          console.log(data);
+          // store all the users in state
+          setSearchResults(data.users);
         }
       })
       .catch((err) => toast.error(err.message));
   };
 
-  console.log(user);
-
   return (
     <div>
       <ChatContext.Provider
-        value={{ login, signup, logout, user, searchFriends }}
+        value={{
+          login,
+          signup,
+          logout,
+          user,
+          searchFriends,
+          searchResults,
+          BASE_URL,
+        }}
       >
         <ToastContainer />
         <Routes>

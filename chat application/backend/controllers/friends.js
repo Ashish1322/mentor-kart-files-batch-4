@@ -28,8 +28,44 @@ const addFriend = async (req, res) => {
         .status(400)
         .json({ success: false, message: "No user Found by this Id" });
     }
-    // 2. Add the the user with friendid in the friendlist
-    await Friends.create({ sender: req.user._id, receiver: friendid });
+
+    // generating the unique id by combinng both the user ids
+    let connectionId;
+    if (req.user._id > friendid) connectionId = req.user._id + friendid;
+    else connectionId = friendid + req.user._id;
+
+    const alreadyInConnection = await Friends.findOne({
+      connectionId: connectionId,
+      $or: [{ status: "Pending" }, { status: "Accepted" }],
+    });
+
+    // 2. Check if Both are already friends ( Complex Query )
+    // const alreadyInConnection = await Friends.findOne({
+    //   $or: [{ status: "Pending" }, { status: "Accepted" }],
+    //   $or: [
+    //     {
+    //       sender: req.user._id,
+    //       receiver: friendid,
+    //     },
+    //     {
+    //       sender: friendid,
+    //       receiver: req.user._id,
+    //     },
+    //   ],
+    // });
+
+    if (alreadyInConnection)
+      return res
+        .status(400)
+        .json({ success: false, message: "Already in Friends" });
+
+    // 2. Add the the user with friendid in the friendlist ( Generating Uniqu Key)
+
+    await Friends.create({
+      sender: req.user._id,
+      receiver: friendid,
+      connectionId: connectionId,
+    });
 
     return res
       .status(200)

@@ -15,6 +15,9 @@ const friendSchema = new mongoose.Schema({
     default: "Pending",
     required: true,
   },
+  connectionId: {
+    type: String,
+  },
 });
 
 module.exports = mongoose.model("Friends", friendSchema);
