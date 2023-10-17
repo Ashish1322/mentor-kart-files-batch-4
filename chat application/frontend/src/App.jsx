@@ -10,6 +10,8 @@ import ChatContext from "../ChatContext";
 import { useEffect, useState } from "react";
 export default function App() {
   const [user, setUser] = useState(null);
+  const [pendingRequest, setPendingRequest] = useState([]);
+  const [acceptedRequests, setAcceptedRequest] = useState([]);
 
   const navigator = useNavigate();
   const BASE_URL = "http://127.0.0.1:8000";
@@ -78,6 +80,41 @@ export default function App() {
 
   const [searchResults, setSearchResults] = useState([]);
   // search for friend
+
+  const fetchPendingRequest = () => {
+    fetch(`${BASE_URL}/friends/all-pending`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user.token,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success == true) {
+          setPendingRequest(data.friends);
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
+  const fetchAcceptedRequests = () => {
+    fetch(`${BASE_URL}/friends/all-friends`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user.token,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success == true) {
+          setAcceptedRequest(data.friends);
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
   const searchFriends = (query) => {
     fetch(`${BASE_URL}/friends/search-friend`, {
       method: "POST",
@@ -99,6 +136,17 @@ export default function App() {
       .catch((err) => toast.error(err.message));
   };
 
+  // if user is coming in website first time then fetch all the pending and accepted request
+  useEffect(() => {
+    if (user) {
+      fetchPendingRequest();
+      fetchAcceptedRequests();
+    }
+  }, [user]);
+
+  console.log(pendingRequest);
+  console.log(acceptedRequests);
+
   return (
     <div>
       <ChatContext.Provider
@@ -109,7 +157,11 @@ export default function App() {
           user,
           searchFriends,
           searchResults,
+          fetchPendingRequest,
           BASE_URL,
+          fetchAcceptedRequests,
+          pendingRequest,
+          acceptedRequests,
         }}
       >
         <ToastContainer />

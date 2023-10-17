@@ -30,6 +30,7 @@ router.get("/all-pending", isLoggedIn, fetchPendingRequest);
 
 // accept the Friend Request
 router.get("/accept-request/:docid", isLoggedIn, accpetFriendRequest);
+
 // Reject the Frind Request
 
 module.exports = router;

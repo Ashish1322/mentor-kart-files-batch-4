@@ -92,7 +92,7 @@ const fetchPendingRequest = async (req, res) => {
   try {
     const friends = await Friends.find({
       status: "Pending",
-      $or: [{ sender: req.user._id }, { receiver: req.user._id }],
+      receiver: req.user._id,
     });
     return res.status(200).json({ success: true, friends });
   } catch (err) {
