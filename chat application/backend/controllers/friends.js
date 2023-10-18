@@ -81,7 +81,7 @@ const giveConnectedFriends = async (req, res) => {
     const friends = await Friends.find({
       status: "Accepted",
       $or: [{ sender: req.user._id }, { receiver: req.user._id }],
-    });
+    }).populate("sender receiver");
     return res.status(200).json({ success: true, friends });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -93,7 +93,8 @@ const fetchPendingRequest = async (req, res) => {
     const friends = await Friends.find({
       status: "Pending",
       receiver: req.user._id,
-    });
+    }).populate("sender");
+
     return res.status(200).json({ success: true, friends });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -115,7 +116,7 @@ const accpetFriendRequest = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Invalid Request" });
     }
-    return res.status(200).json({ success: true, message: "Req Accepted" });
+    return res.status(200).json({ success: true, message: "Request Accepted" });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
   }

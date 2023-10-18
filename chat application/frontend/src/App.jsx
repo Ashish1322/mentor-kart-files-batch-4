@@ -136,6 +136,29 @@ export default function App() {
       .catch((err) => toast.error(err.message));
   };
 
+  const handleAcceptReqeust = (docid) => {
+    console.log("HI");
+    fetch(`${BASE_URL}/friends/accept-request/${docid}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user.token,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success == false) {
+          toast.error(data.message);
+        } else {
+          // store all the users in state
+          fetchPendingRequest();
+          fetchAcceptedRequests();
+          toast.success("Request Accepted");
+        }
+      })
+      .catch((err) => toast.error(err.message));
+  };
+
   // if user is coming in website first time then fetch all the pending and accepted request
   useEffect(() => {
     if (user) {
@@ -143,9 +166,6 @@ export default function App() {
       fetchAcceptedRequests();
     }
   }, [user]);
-
-  console.log(pendingRequest);
-  console.log(acceptedRequests);
 
   return (
     <div>
@@ -162,6 +182,7 @@ export default function App() {
           fetchAcceptedRequests,
           pendingRequest,
           acceptedRequests,
+          handleAcceptReqeust,
         }}
       >
         <ToastContainer />

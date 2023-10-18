@@ -43,6 +43,7 @@ const login = (req, res) => {
             message: "Logged In Success",
             token,
             name: user.name,
+            _id: user._id,
           });
         }
         // incorrect password

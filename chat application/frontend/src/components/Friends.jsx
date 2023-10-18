@@ -3,9 +3,11 @@ import ChatContext from "../../ChatContext";
 import { useContext } from "react";
 
 import Modal from "./Modal";
+import PendingModal from "./PendingModal";
 export default function Friends() {
-  const { pendingRequest } = useContext(ChatContext);
-
+  const { pendingRequest, acceptedRequests, user } = useContext(ChatContext);
+  console.log(acceptedRequests);
+  console.log(user);
   return (
     <div
       className="p-2"
@@ -19,22 +21,27 @@ export default function Friends() {
       >
         Search a Freind
       </button>
+
       <button
         type="button "
         className="btn btn-warning btn-sm mx-2"
         data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
+        data-bs-target="#pendingdiv"
       >
         Pending ( {pendingRequest.length} )
       </button>
 
       <Modal />
+      <PendingModal />
 
-      <FriendCard />
-      <FriendCard />
-      <FriendCard />
-      <FriendCard />
-      <FriendCard />
+      {acceptedRequests.map((item, index) => (
+        <FriendCard
+          key={index}
+          name={
+            item.sender._id == user._id ? item.receiver.name : item.sender.name
+          }
+        />
+      ))}
     </div>
   );
 }
