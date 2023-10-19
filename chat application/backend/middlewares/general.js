@@ -5,7 +5,7 @@ function isLoggedIn(req, res, next) {
 
   try {
     const data = jwt.verify(token, "ABC1234");
-    console.log(data);
+
     // Injecting the dat inside the request so that the next controllor can access this injected data this is the
     // method for passing the data from  middleware to controllor
     req.user = data;

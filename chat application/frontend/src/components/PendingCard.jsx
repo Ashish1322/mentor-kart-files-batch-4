@@ -2,7 +2,7 @@ import { useContext } from "react";
 import ChatContext from "../../ChatContext";
 
 export default function PendingCard({ name, email, docId }) {
-  const { handleAcceptReqeust } = useContext(ChatContext);
+  const { handleAcceptReqeust, handleRejectReqeust } = useContext(ChatContext);
 
   return (
     <div className="card p-2" style={{ width: "100%", borderRadius: 0 }}>
@@ -23,7 +23,10 @@ export default function PendingCard({ name, email, docId }) {
         </div>
 
         <div className="col col-3">
-          <button className="btn btn-sm btn-danger">
+          <button
+            onClick={() => handleRejectReqeust(docId)}
+            className="btn btn-sm btn-danger"
+          >
             {" "}
             <i className="fa-solid fa-xmark"></i> Reject
           </button>

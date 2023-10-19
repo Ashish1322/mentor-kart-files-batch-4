@@ -9,6 +9,7 @@ const {
   giveConnectedFriends,
   fetchPendingRequest,
   accpetFriendRequest,
+  rejectFriendRequest,
 } = require("../controllers/friends");
 
 // importing middlewares
@@ -32,5 +33,6 @@ router.get("/all-pending", isLoggedIn, fetchPendingRequest);
 router.get("/accept-request/:docid", isLoggedIn, accpetFriendRequest);
 
 // Reject the Frind Request
+router.get("/reject-request/:docid", isLoggedIn, rejectFriendRequest);
 
 module.exports = router;

@@ -32,6 +32,7 @@ export default function PendingModal() {
               />
             </div>
             <div className="modal-body p-2">
+              {pendingRequest.length == 0 ? <p>No Pending Requests</p> : null}
               {pendingRequest.map((item, index) => (
                 <PendingCard
                   key={index}

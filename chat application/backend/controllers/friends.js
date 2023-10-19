@@ -122,12 +122,27 @@ const accpetFriendRequest = async (req, res) => {
   }
 };
 
+const rejectFriendRequest = async (req, res) => {
+  const { docid } = req.params;
+
+  const result = await Friends.findOneAndUpdate(
+    { _id: docid, receiver: req.user._id },
+    { status: "Rejected" }
+  );
+
+  if (!result) {
+    return res.status(400).json({ success: false, message: "Invalid Request" });
+  }
+  return res.status(200).json({ success: true, message: "Request Accepted" });
+};
+
 module.exports = {
   searchFriend,
   addFriend,
   giveConnectedFriends,
   fetchPendingRequest,
   accpetFriendRequest,
+  rejectFriendRequest,
 };
 
 // Umesh
