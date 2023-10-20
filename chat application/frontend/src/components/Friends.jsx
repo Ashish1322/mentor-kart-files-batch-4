@@ -40,6 +40,7 @@ export default function Friends() {
           name={
             item.sender._id == user._id ? item.receiver.name : item.sender.name
           }
+          connectionId={item.connectionId}
         />
       ))}
     </div>

@@ -12,6 +12,7 @@ export default function App() {
   const [user, setUser] = useState(null);
   const [pendingRequest, setPendingRequest] = useState([]);
   const [acceptedRequests, setAcceptedRequest] = useState([]);
+  const [receiver, setReceiver] = useState(null);
 
   const navigator = useNavigate();
   const BASE_URL = "http://127.0.0.1:8000";
@@ -137,7 +138,6 @@ export default function App() {
   };
 
   const handleAcceptReqeust = (docid) => {
-    console.log("HI");
     fetch(`${BASE_URL}/friends/accept-request/${docid}`, {
       method: "GET",
       headers: {
@@ -160,7 +160,6 @@ export default function App() {
   };
 
   const handleRejectReqeust = (docid) => {
-    console.log("HI");
     fetch(`${BASE_URL}/friends/reject-request/${docid}`, {
       method: "GET",
       headers: {
@@ -190,6 +189,19 @@ export default function App() {
     }
   }, [user]);
 
+  useEffect(() => {
+    console.log(acceptedRequests);
+    if (acceptedRequests.length > 0) {
+      // conecctionId, name
+      const connectionId = acceptedRequests[0].connectionId;
+      const name =
+        user._id == acceptedRequests[0].sender._id
+          ? acceptedRequests[0].receiver.name
+          : acceptedRequests[0].sender.name;
+      setReceiver({ connectionId, name });
+    }
+  }, [acceptedRequests]);
+
   return (
     <div>
       <ChatContext.Provider
@@ -207,6 +219,8 @@ export default function App() {
           acceptedRequests,
           handleAcceptReqeust,
           handleRejectReqeust,
+          receiver,
+          setReceiver,
         }}
       >
         <ToastContainer />
