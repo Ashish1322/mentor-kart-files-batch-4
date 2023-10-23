@@ -1,12 +1,12 @@
 import ChatContext from "../../ChatContext";
 import { useContext } from "react";
-export default function FriendCard({ connectionId, name }) {
+export default function FriendCard({ connectionId, name, receiverId }) {
   const { setReceiver } = useContext(ChatContext);
 
   return (
     <div
       onClick={() => {
-        setReceiver({ connectionId, name });
+        setReceiver({ connectionId, name, receiverId });
       }}
       className="card p-2 my-2"
       style={{ width: "100%" }}

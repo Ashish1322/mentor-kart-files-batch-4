@@ -159,6 +159,25 @@ export default function App() {
       .catch((err) => toast.error(err.message));
   };
 
+  const fetchMessages = () => {
+    fetch(
+      `${BASE_URL}/messages/get-message/${receiver && receiver.receiverId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: user.token,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => console.log("Messages", data))
+      .catch((err) => console.log(err.message));
+  };
+
+  const sendMessage = (message) => {
+    alert(message);
+  };
   const handleRejectReqeust = (docid) => {
     fetch(`${BASE_URL}/friends/reject-request/${docid}`, {
       method: "GET",
@@ -190,7 +209,6 @@ export default function App() {
   }, [user]);
 
   useEffect(() => {
-    console.log(acceptedRequests);
     if (acceptedRequests.length > 0) {
       // conecctionId, name
       const connectionId = acceptedRequests[0].connectionId;
@@ -198,9 +216,18 @@ export default function App() {
         user._id == acceptedRequests[0].sender._id
           ? acceptedRequests[0].receiver.name
           : acceptedRequests[0].sender.name;
-      setReceiver({ connectionId, name });
+      const receiverId = acceptedRequests[0].sender._id
+        ? acceptedRequests[0].receiver._id
+        : acceptedRequests[0].sender._id;
+
+      setReceiver({ connectionId, name, receiverId });
     }
   }, [acceptedRequests]);
+
+  // fetch all the messages everytime when the receiver state is chagned
+  useEffect(() => {
+    if (user) fetchMessages();
+  }, [receiver, user]);
 
   return (
     <div>
@@ -221,6 +248,7 @@ export default function App() {
           handleRejectReqeust,
           receiver,
           setReceiver,
+          sendMessage,
         }}
       >
         <ToastContainer />

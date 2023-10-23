@@ -40,6 +40,9 @@ export default function Friends() {
           name={
             item.sender._id == user._id ? item.receiver.name : item.sender.name
           }
+          receiverId={
+            item.sender._id == user._id ? item.receiver._id : item.sender._id
+          }
           connectionId={item.connectionId}
         />
       ))}

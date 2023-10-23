@@ -3,9 +3,12 @@ const express = require("express");
 const router = express.Router();
 
 // importing controllers
-const {} = require("../controllers/messages");
+const { sendMessage, fetchAllMessages } = require("../controllers/messages");
 
 // importing middlewares
-const {} = require("../middlewares/general");
+const { isLoggedIn } = require("../middlewares/general");
+
+router.post("/send-message", isLoggedIn, sendMessage);
+router.get("/get-message/:receiver", isLoggedIn, fetchAllMessages);
 
 module.exports = router;
