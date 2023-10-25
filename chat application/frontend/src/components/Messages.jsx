@@ -1,4 +1,5 @@
-import React from "react";
+import { useContext } from "react";
+import ChatContext from "../../ChatContext";
 
 const senderStyles = {
   backgroundColor: "lightpink",
@@ -19,23 +20,20 @@ const receiverStyles = {
 };
 
 export default function Messages() {
+  const { messages, user } = useContext(ChatContext);
   return (
-    <div className="p-3">
-      <div>
-        <p style={receiverStyles}>Hi How are You</p>
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "end" }}>
-        <p style={senderStyles}>Hi How are You</p>
-      </div>
-
-      <div>
-        <p style={receiverStyles}>Hi How are You</p>
-      </div>
-
-      <div style={{ display: "flex", justifyContent: "end" }}>
-        <p style={senderStyles}>Hi How are You</p>
-      </div>
+    <div className="p-3" style={{ overflow: "scroll" }}>
+      {messages.map((item, index) =>
+        item.sender == user._id ? (
+          <div style={{ display: "flex", justifyContent: "end" }}>
+            <p style={senderStyles}>{item.message}</p>
+          </div>
+        ) : (
+          <div key={index}>
+            <p style={receiverStyles}>{item.message}</p>
+          </div>
+        )
+      )}
     </div>
   );
 }

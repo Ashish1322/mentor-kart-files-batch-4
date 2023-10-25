@@ -9,6 +9,6 @@ const { sendMessage, fetchAllMessages } = require("../controllers/messages");
 const { isLoggedIn } = require("../middlewares/general");
 
 router.post("/send-message", isLoggedIn, sendMessage);
-router.get("/get-message/:receiver", isLoggedIn, fetchAllMessages);
+router.get("/get-message/:reciever", isLoggedIn, fetchAllMessages);
 
 module.exports = router;

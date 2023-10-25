@@ -23,6 +23,13 @@ const addFriend = async (req, res) => {
   try {
     const friend = await User.findById(friendid);
 
+    // check if loggedin user nad friend id same
+    if (req.user._id == friendid)
+      return res.status(400).json({
+        success: false,
+        message: "You cannot send request to yourself",
+      });
+
     if (!friend) {
       return res
         .status(400)

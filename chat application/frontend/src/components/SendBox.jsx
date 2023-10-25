@@ -17,13 +17,17 @@ export default function SendBox() {
       }}
     >
       <input
+        value={message}
         onChange={(e) => setMessage(e.currentTarget.value)}
         className="border-0 px-2"
         style={{ outline: "none", width: "90%", borderRadius: 5 }}
         placeholder="Type your Message"
       />
       <button
-        onClick={() => sendMessage(message)}
+        onClick={() => {
+          sendMessage(message);
+          setMessage("");
+        }}
         className="btn btn-primary btn-sm"
       >
         Send

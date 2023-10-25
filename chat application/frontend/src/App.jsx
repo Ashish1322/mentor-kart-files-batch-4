@@ -14,6 +14,8 @@ export default function App() {
   const [acceptedRequests, setAcceptedRequest] = useState([]);
   const [receiver, setReceiver] = useState(null);
 
+  const [messages, setMessages] = useState([]);
+
   const navigator = useNavigate();
   const BASE_URL = "http://127.0.0.1:8000";
 
@@ -171,13 +173,34 @@ export default function App() {
       }
     )
       .then((res) => res.json())
-      .then((data) => console.log("Messages", data))
+      .then((data) => {
+        if (data.success == false) toast.err(data.message);
+        else setMessages(data.messeges);
+      })
       .catch((err) => console.log(err.message));
   };
 
   const sendMessage = (message) => {
-    alert(message);
+    if (message.length == 0) return;
+
+    fetch(`${BASE_URL}/messages/send-message`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: user.token,
+      },
+      body: JSON.stringify({
+        message,
+        reciever: receiver.receiverId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success == false) toast.error(data.message);
+      })
+      .catch((err) => toast.error(err.message));
   };
+
   const handleRejectReqeust = (docid) => {
     fetch(`${BASE_URL}/friends/reject-request/${docid}`, {
       method: "GET",
@@ -229,6 +252,7 @@ export default function App() {
     if (user) fetchMessages();
   }, [receiver, user]);
 
+  console.log("messeges", messages);
   return (
     <div>
       <ChatContext.Provider
@@ -249,6 +273,7 @@ export default function App() {
           receiver,
           setReceiver,
           sendMessage,
+          messages,
         }}
       >
         <ToastContainer />
