@@ -249,7 +249,10 @@ export default function App() {
 
   // fetch all the messages everytime when the receiver state is chagned
   useEffect(() => {
-    if (user) fetchMessages();
+    if (user) {
+      fetchMessages();
+      setInterval(fetchMessages, 1000);
+    }
   }, [receiver, user]);
 
   console.log("messeges", messages);
