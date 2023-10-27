@@ -6,8 +6,7 @@ import Modal from "./Modal";
 import PendingModal from "./PendingModal";
 export default function Friends() {
   const { pendingRequest, acceptedRequests, user } = useContext(ChatContext);
-  console.log(acceptedRequests);
-  console.log(user);
+
   return (
     <div
       className="p-2"

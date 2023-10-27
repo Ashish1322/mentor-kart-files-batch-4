@@ -2,9 +2,10 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Home from "./components/Home";
 import { Route, Routes, useNavigate } from "react-router-dom";
-
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
+
+import Pusher from "pusher-js";
 
 import ChatContext from "../ChatContext";
 import { useEffect, useState } from "react";
@@ -231,6 +232,25 @@ export default function App() {
     }
   }, [user]);
 
+  // Subscribe the pusher channel when website is laoded first time
+  useEffect(() => {
+    var pusher = new Pusher("ae74635f648e28a76f25", {
+      cluster: "ap2",
+    });
+    // 1. subscribed the channel
+    var channel = pusher.subscribe("new-messege-channel");
+    // 2. Bind with a specific event inside this cahnnel
+    channel.bind("messege-added", (data) => {
+      // create a new array in which all the previouse elements of array + new data will be there
+      setMessages((previousState) => [...previousState, data]);
+    });
+
+    // syntax to provide the cleanup function
+    return () => {
+      pusher.unsubscribe("new-messege-channel");
+    };
+  }, []);
+
   useEffect(() => {
     if (acceptedRequests.length > 0) {
       // conecctionId, name
@@ -239,9 +259,10 @@ export default function App() {
         user._id == acceptedRequests[0].sender._id
           ? acceptedRequests[0].receiver.name
           : acceptedRequests[0].sender.name;
-      const receiverId = acceptedRequests[0].sender._id
-        ? acceptedRequests[0].receiver._id
-        : acceptedRequests[0].sender._id;
+      const receiverId =
+        acceptedRequests[0].sender._id == user._id
+          ? acceptedRequests[0].receiver._id
+          : acceptedRequests[0].sender._id;
 
       setReceiver({ connectionId, name, receiverId });
     }
@@ -251,11 +272,9 @@ export default function App() {
   useEffect(() => {
     if (user) {
       fetchMessages();
-      setInterval(fetchMessages, 1000);
     }
   }, [receiver, user]);
 
-  console.log("messeges", messages);
   return (
     <div>
       <ChatContext.Provider

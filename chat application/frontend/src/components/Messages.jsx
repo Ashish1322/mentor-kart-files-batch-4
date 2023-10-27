@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { useEffect } from "react";
 import { useContext } from "react";
 import ChatContext from "../../ChatContext";
 
@@ -44,7 +46,7 @@ export default function Messages() {
   };
 
   return (
-    <div className="p-3" style={{ height: "640px", overflow: "scroll" }}>
+    <div className="p-3" style={{ height: "570px", overflow: "scroll" }}>
       {messages.map((item, index) =>
         item.sender == user._id ? (
           <div key={index}>
@@ -64,7 +66,19 @@ export default function Messages() {
           </div>
         ) : (
           <div key={index}>
-            <p style={receiverStyles}>{item.message}</p>
+            <div>
+              <p style={receiverStyles}>{item.message}</p>
+            </div>
+            <p
+              style={{
+                color: "grey",
+                fontSize: "12px",
+                textAlign: "left",
+                marginRight: "10px",
+              }}
+            >
+              {formatTime(item.createdAt)}
+            </p>
           </div>
         )
       )}

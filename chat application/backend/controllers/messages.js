@@ -1,4 +1,14 @@
 const Messages = require("../modals/Messages");
+const Pusher = require("pusher");
+
+const pusher = new Pusher({
+  appId: "1695941",
+  key: "ae74635f648e28a76f25",
+  secret: "f70e83239197327b4797",
+  cluster: "ap2",
+  useTLS: true,
+});
+
 // this function will send the message
 const sendMessage = async (req, res) => {
   // receiver = objectId ( String)
@@ -13,12 +23,15 @@ const sendMessage = async (req, res) => {
     }
 
     // insert the data
-    await Messages.create({
+    const newMessege = await Messages.create({
       message: message,
       sender: req.user._id,
       reciever: reciever,
       messageId: messageId,
     });
+
+    // after inserting message we will trigger the pusher channel
+    pusher.trigger("new-messege-channel", "messege-added", newMessege);
 
     return res.status(200).json({ success: true, message: "Messege Sent" });
   } catch (err) {
