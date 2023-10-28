@@ -2,10 +2,10 @@ const Messages = require("../modals/Messages");
 const Pusher = require("pusher");
 
 const pusher = new Pusher({
-  appId: "1695941",
-  key: "ae74635f648e28a76f25",
-  secret: "f70e83239197327b4797",
-  cluster: "ap2",
+  appId: "",
+  key: "",
+  secret: "",
+  cluster: "",
   useTLS: true,
 });
 
