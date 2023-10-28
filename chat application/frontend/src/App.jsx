@@ -234,7 +234,7 @@ export default function App() {
 
   // Subscribe the pusher channel when website is laoded first time
   useEffect(() => {
-    var pusher = new Pusher("ae74635f648e28a76f25", {
+    var pusher = new Pusher("", {
       cluster: "ap2",
     });
     // 1. subscribed the channel
