@@ -234,22 +234,47 @@ export default function App() {
 
   // Subscribe the pusher channel when website is laoded first time
   useEffect(() => {
-    var pusher = new Pusher("ae74635f648e28a76f25", {
+    let pusher = new Pusher("ae74635f648e28a76f25", {
       cluster: "ap2",
     });
     // 1. subscribed the channel
-    var channel = pusher.subscribe("new-messege-channel");
+    let channel = pusher.subscribe("new-messege-channel");
     // 2. Bind with a specific event inside this cahnnel
     channel.bind("messege-added", (data) => {
-      // create a new array in which all the previouse elements of array + new data will be there
-      setMessages((previousState) => [...previousState, data]);
+      // check if this data belongs to us
+      if (receiver.connectionId == data.messageId) {
+        // create a new array in which all the previouse elements of array + new data will be there
+        setMessages((previousState) => [...previousState, data]);
+      }
     });
 
     // syntax to provide the cleanup function
     return () => {
       pusher.unsubscribe("new-messege-channel");
     };
-  }, []);
+  }, [receiver]);
+
+  // Subscribe to pusher so that you can get the updated Friend Reqeusts
+  useEffect(() => {
+    let pusher = new Pusher("ae74635f648e28a76f25", {
+      cluster: "ap2",
+    });
+    // 1. subscribed the channel
+    let channel = pusher.subscribe("new-messege-channel");
+    // 2. Bind with a specific event inside this cahnnel
+    channel.bind("friend-request", (data) => {
+      console.log(data);
+      // check if the request belong to current loggein user then only add i npending state
+      if (user._id == data.receiver) {
+        setPendingRequest((prev) => [...prev, data]);
+      }
+    });
+
+    // syntax to provide the cleanup function
+    return () => {
+      pusher.unsubscribe("new-messege-channel");
+    };
+  }, [user]);
 
   useEffect(() => {
     if (acceptedRequests.length > 0) {

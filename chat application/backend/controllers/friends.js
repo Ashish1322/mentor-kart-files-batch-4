@@ -1,6 +1,16 @@
 const User = require("../modals/ChatUser");
 const Friends = require("../modals/Friends");
 
+const Pusher = require("pusher");
+
+const pusher = new Pusher({
+  appId: "1695941",
+  key: "ae74635f648e28a76f25",
+  secret: "f70e83239197327b4797",
+  cluster: "ap2",
+  useTLS: true,
+});
+
 // Pending: We have to optimise this so that it will find the pattern not compare them
 const searchFriend = (req, res) => {
   const { query } = req.body;
@@ -66,13 +76,18 @@ const addFriend = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Already in Friends" });
 
-    // 2. Add the the user with friendid in the friendlist ( Generating Uniqu Key)
-
-    await Friends.create({
+    // addign the new friend in the database
+    const newFriend = await Friends.create({
       sender: req.user._id,
       receiver: friendid,
       connectionId: connectionId,
     });
+    // searching that new freind again so that we can populate it ( newFriend._id == documentId)
+    const newFriendComplete = await Friends.findById(newFriend._id).populate(
+      "sender"
+    );
+
+    pusher.trigger("new-messege-channel", "friend-request", newFriendComplete);
 
     return res
       .status(200)
