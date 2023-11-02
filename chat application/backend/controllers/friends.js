@@ -14,10 +14,8 @@ const pusher = new Pusher({
 // Pending: We have to optimise this so that it will find the pattern not compare them
 const searchFriend = (req, res) => {
   const { query } = req.body;
-  User.find({ $or: [{ name: query }, { email: query }] })
-    .select("name _id email")
+  User.find({ $text: { $search: query } })
     .then((users) => {
-      console.log(users);
       res.status(200).json({ success: true, users });
     })
     .catch((err) =>
@@ -87,6 +85,7 @@ const addFriend = async (req, res) => {
       "sender"
     );
 
+    console.log("Hitting the Channel");
     pusher.trigger("new-messege-channel", "friend-request", newFriendComplete);
 
     return res
@@ -117,6 +116,7 @@ const fetchPendingRequest = async (req, res) => {
       receiver: req.user._id,
     }).populate("sender");
 
+    console.log("Pending", friends);
     return res.status(200).json({ success: true, friends });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });
@@ -138,6 +138,18 @@ const accpetFriendRequest = async (req, res) => {
         .status(400)
         .json({ success: false, message: "Invalid Request" });
     }
+
+    // fethc the again in order to populate and send the dat
+    const acceptedReqeust = await Friends.findById(docid).populate(
+      "receiver sender"
+    );
+
+    pusher.trigger(
+      "new-messege-channel",
+      "friend-request-accepted",
+      acceptedReqeust
+    );
+
     return res.status(200).json({ success: true, message: "Request Accepted" });
   } catch (err) {
     return res.status(500).json({ success: false, message: err.message });

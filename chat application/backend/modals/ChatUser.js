@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    index: true,
   },
   email: {
     type: String,
@@ -16,9 +17,11 @@ const userSchema = new mongoose.Schema({
   },
   verified: {
     type: Boolean,
-    default: false,
+    default: true,
     required: true,
   },
 });
+
+userSchema.index({ name: "text", email: "text" });
 
 module.exports = mongoose.model("ChatUser", userSchema);

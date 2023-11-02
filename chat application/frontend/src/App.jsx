@@ -263,10 +263,18 @@ export default function App() {
     let channel = pusher.subscribe("new-messege-channel");
     // 2. Bind with a specific event inside this cahnnel
     channel.bind("friend-request", (data) => {
-      console.log(data);
-      // check if the request belong to current loggein user then only add i npending state
+      // if you are receiver in the coming pending friend reqjuest then this belongs to you
       if (user._id == data.receiver) {
         setPendingRequest((prev) => [...prev, data]);
+      }
+    });
+
+    channel.bind("friend-request-accepted", (data) => {
+      // if the friend reqjuest is accepted and in received we are presetn as a sender it measn this
+      // is the request that we sent and receiver has accepted so we should update in real time
+      if (user._id == data.sender._id) {
+        console.log(data);
+        setAcceptedRequest((prev) => [...prev, data]);
       }
     });
 
