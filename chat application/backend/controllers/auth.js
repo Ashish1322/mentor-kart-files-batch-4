@@ -137,4 +137,10 @@ const activateAccount = async (req, res) => {
   }
 };
 
-module.exports = { login, signup, activateAccount };
+const uploadProfilPic = async (req, res) => {
+  console.log(req.file);
+
+  return res.json({ success: true, message: "File Uploaded" });
+};
+
+module.exports = { login, signup, activateAccount, uploadProfilPic };

@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
+// apply the indexing
 userSchema.index({ name: "text", email: "text" });
 
 module.exports = mongoose.model("ChatUser", userSchema);
