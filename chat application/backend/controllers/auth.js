@@ -44,6 +44,7 @@ const login = (req, res) => {
             token,
             name: user.name,
             _id: user._id,
+            profilePic: user.profilePic,
           });
         }
         // incorrect password
@@ -138,7 +139,10 @@ const activateAccount = async (req, res) => {
 };
 
 const uploadProfilPic = async (req, res) => {
-  console.log(req.file);
+  // console.log(`http://localhost:8000/static/${req.file.filename}`);
+  await User.findByIdAndUpdate(req.user._id, {
+    profilePic: `http://localhost:8000/uploads/${req.file.filename}`,
+  });
 
   return res.json({ success: true, message: "File Uploaded" });
 };

@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
-
+const path = require("path");
 // import Routes
 const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
@@ -29,6 +29,9 @@ mongoose
 app.get("/", (req, res) =>
   res.json({ success: true, message: "Server is Running Fine" })
 );
+
+// Special Route: Which will server the uploads folder
+app.use("/uploads", express.static("uploads"));
 
 // adding external routes
 app.use("/auth", authRoutes);

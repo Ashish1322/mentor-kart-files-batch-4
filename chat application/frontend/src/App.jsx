@@ -33,6 +33,7 @@ export default function App() {
         if (data.success == false) {
           toast.error(data.message);
         } else {
+          console.log(data);
           // store the user in state
           setUser(data);
           // store the user in localstorage
@@ -308,6 +309,9 @@ export default function App() {
     }
   }, [receiver, user]);
 
+  // function that will upload the file
+  const uploadProfilePic = (file) => {};
+
   return (
     <div>
       <ChatContext.Provider
@@ -329,6 +333,7 @@ export default function App() {
           setReceiver,
           sendMessage,
           messages,
+          uploadProfilePic,
         }}
       >
         <ToastContainer />
