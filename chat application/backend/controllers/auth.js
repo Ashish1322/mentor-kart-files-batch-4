@@ -139,12 +139,13 @@ const activateAccount = async (req, res) => {
 };
 
 const uploadProfilPic = async (req, res) => {
+  let profilePic = `http://localhost:8000/uploads/${req.file.filename}`;
   // console.log(`http://localhost:8000/static/${req.file.filename}`);
   await User.findByIdAndUpdate(req.user._id, {
-    profilePic: `http://localhost:8000/uploads/${req.file.filename}`,
+    profilePic: profilePic,
   });
 
-  return res.json({ success: true, message: "File Uploaded" });
+  return res.json({ success: true, message: "File Uploaded", profilePic });
 };
 
 module.exports = { login, signup, activateAccount, uploadProfilPic };

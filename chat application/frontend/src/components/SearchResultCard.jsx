@@ -5,6 +5,7 @@ export default function SearchResultCard({
   email,
   sendRequest,
   friendId,
+  profilePic,
 }) {
   return (
     <div className="card p-2 my-2" style={{ width: "100%" }}>
@@ -14,7 +15,7 @@ export default function SearchResultCard({
             className="rounded-circle mt-1"
             width={30}
             height={30}
-            src="https://mentorkart.com/images/logo-full.png"
+            src={profilePic}
           />
           <p className="mx-2 mt-1">{name}</p>
           <p className="mx-2 mt-1">{email}</p>

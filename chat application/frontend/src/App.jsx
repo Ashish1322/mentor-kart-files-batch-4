@@ -298,7 +298,12 @@ export default function App() {
           ? acceptedRequests[0].receiver._id
           : acceptedRequests[0].sender._id;
 
-      setReceiver({ connectionId, name, receiverId });
+      const profilePic =
+        acceptedRequests[0].sender._id == user._id
+          ? acceptedRequests[0].receiver.profilePic
+          : acceptedRequests[0].sender.profilePic;
+
+      setReceiver({ connectionId, name, receiverId, profilePic });
     }
   }, [acceptedRequests]);
 
@@ -310,7 +315,6 @@ export default function App() {
   }, [receiver, user]);
 
   // function that will upload the file
-  const uploadProfilePic = (file) => {};
 
   return (
     <div>
@@ -333,7 +337,7 @@ export default function App() {
           setReceiver,
           sendMessage,
           messages,
-          uploadProfilePic,
+          setUser,
         }}
       >
         <ToastContainer />

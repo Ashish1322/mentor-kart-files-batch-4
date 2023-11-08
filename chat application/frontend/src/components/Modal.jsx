@@ -75,6 +75,7 @@ export default function Modal() {
                     name={item.name}
                     email={item.email}
                     friendId={item._id}
+                    profilePic={item.profilePic}
                   />
                 ))}
               </div>

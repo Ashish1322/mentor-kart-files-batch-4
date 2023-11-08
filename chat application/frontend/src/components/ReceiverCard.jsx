@@ -10,7 +10,15 @@ export default function ReceiverCard() {
       style={{ backgroundColor: "#FAF9F6", borderRadius: 0 }}
     >
       <div className="row">
-        <div className="col col-8 d-flex">
+        <div className="col col-2 d-flex">
+          <img
+            className="rounded-circle mt-1"
+            width={30}
+            height={30}
+            src={receiver && receiver.profilePic}
+          />
+        </div>
+        <div className="col col-10 d-flex">
           <p className="mx-2 mt-1">{receiver && receiver.name}</p>
         </div>
       </div>

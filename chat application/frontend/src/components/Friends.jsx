@@ -42,6 +42,11 @@ export default function Friends() {
           receiverId={
             item.sender._id == user._id ? item.receiver._id : item.sender._id
           }
+          profilePic={
+            item.sender._id == user._id
+              ? item.receiver.profilePic
+              : item.sender.profilePic
+          }
           connectionId={item.connectionId}
         />
       ))}
