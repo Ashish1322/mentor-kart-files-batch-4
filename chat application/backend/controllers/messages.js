@@ -1,11 +1,13 @@
 const Messages = require("../modals/Messages");
 const Pusher = require("pusher");
+const dotenv = require("dotenv");
+dotenv.config();
 
 const pusher = new Pusher({
-  appId: "",
-  key: "",
-  secret: "",
-  cluster: "",
+  appId: process.env.appId,
+  key: process.env.key,
+  secret: process.env.secret,
+  cluster: process.env.cluster,
   useTLS: true,
 });
 

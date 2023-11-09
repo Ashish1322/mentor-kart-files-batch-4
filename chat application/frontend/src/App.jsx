@@ -235,7 +235,7 @@ export default function App() {
 
   // Subscribe the pusher channel when website is laoded first time
   useEffect(() => {
-    let pusher = new Pusher("ae74635f648e28a76f25", {
+    let pusher = new Pusher("1065a8c69d5666b3674f", {
       cluster: "ap2",
     });
     // 1. subscribed the channel
@@ -257,7 +257,7 @@ export default function App() {
 
   // Subscribe to pusher so that you can get the updated Friend Reqeusts
   useEffect(() => {
-    let pusher = new Pusher("ae74635f648e28a76f25", {
+    let pusher = new Pusher("1065a8c69d5666b3674f", {
       cluster: "ap2",
     });
     // 1. subscribed the channel

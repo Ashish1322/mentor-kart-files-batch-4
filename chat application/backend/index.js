@@ -8,6 +8,10 @@ const authRoutes = require("./routes/auth");
 const messageRoutes = require("./routes/messages");
 const friendsRoutes = require("./routes/friends");
 
+// dotenv
+const dotenv = require("dotenv");
+dotenv.config();
+
 // setup app
 const app = express();
 
@@ -17,9 +21,7 @@ app.use(cors());
 
 // configuring database
 mongoose
-  .connect(
-    "mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.5.0"
-  )
+  .connect(process.env.DATABASE_URL)
   .then(() => console.log("Database Connected"))
   .catch((err) =>
     console.log("Error Occured While Connecting Database " + err.message)
