@@ -18,7 +18,7 @@ export default function App() {
   const [messages, setMessages] = useState([]);
 
   const navigator = useNavigate();
-  const BASE_URL = "http://127.0.0.1:8000";
+  const BASE_URL = "http://localhost:8000";
 
   const login = (email, password) => {
     fetch(`${BASE_URL}/auth/login`, {

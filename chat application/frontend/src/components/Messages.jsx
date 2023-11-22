@@ -45,11 +45,26 @@ export default function Messages() {
     return `${dateObject.toDateString()} at ${hours}:${minutes} ${period} `;
   };
 
+  const endMesageRef = useRef(null);
+
+  useEffect(() => {
+    if (endMesageRef.current) {
+      endMesageRef.current.scrollIntoView();
+    }
+  }, [endMesageRef]);
+
+  if (endMesageRef.current) {
+    endMesageRef.current.scrollIntoView();
+  }
+
   return (
     <div className="p-3" style={{ height: "570px", overflow: "scroll" }}>
-      {messages.map((item, index) =>
-        item.sender == user._id ? (
-          <div key={index}>
+      {messages.map((item, index) => {
+        return item.sender == user._id ? (
+          <div
+            key={index}
+            ref={index == messages.length - 1 ? endMesageRef : null}
+          >
             <div style={{ display: "flex", justifyContent: "end" }}>
               <p style={senderStyles}>{item.message}</p>
             </div>
@@ -65,7 +80,10 @@ export default function Messages() {
             </p>
           </div>
         ) : (
-          <div key={index}>
+          <div
+            key={index}
+            ref={index == messages.length - 1 ? endMesageRef : null}
+          >
             <div>
               <p style={receiverStyles}>{item.message}</p>
             </div>
@@ -80,8 +98,8 @@ export default function Messages() {
               {formatTime(item.createdAt)}
             </p>
           </div>
-        )
-      )}
+        );
+      })}
     </div>
   );
 }

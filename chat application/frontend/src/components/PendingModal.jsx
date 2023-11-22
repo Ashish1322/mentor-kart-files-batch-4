@@ -36,9 +36,9 @@ export default function PendingModal() {
               {pendingRequest.map((item, index) => (
                 <PendingCard
                   key={index}
-                  email={item.sender.email}
-                  name={item.sender.name}
-                  docId={item._id}
+                  email={item.sender?.email}
+                  name={item.sender?.name}
+                  docId={item?._id}
                 />
               ))}
             </div>
